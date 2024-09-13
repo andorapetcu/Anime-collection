@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Slide Navbar</title>
+    <link rel="stylesheet" type="text/css" href="login.component.css">
+    <link href="https://fonts.googleapis.com/css2?family=Jost:wght@500&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="main">
+        <input type="checkbox" id="chk" aria-hidden="true">
+
+        <div class="signup">
+            <form [formGroup]="signupForm" (ngSubmit)="onSignUp()">
+                <label for="chk" aria-hidden="true">Sign up</label>
+                <div class="login-content">
+                    <input type="text" formControlName="firstName" placeholder="First Name">
+                    <div *ngIf="signupForm.get('firstName')?.invalid && signupForm.get('firstName')?.touched">
+                        <small *ngIf="signupForm.get('firstName')?.errors?.['required']">First Name is required.</small>
+                        <small *ngIf="signupForm.get('firstName')?.errors?.['invalidName']">Invalid First Name.</small>
+                    </div>
+                    <input type="text" formControlName="lastName" placeholder="Last Name">
+                    <div *ngIf="signupForm.get('lastName')?.invalid && signupForm.get('lastName')?.touched">
+                        <small *ngIf="signupForm.get('lastName')?.errors?.['required']">Last Name is required.</small>
+                        <small *ngIf="signupForm.get('lastName')?.errors?.['invalidName']">Invalid Last Name.</small>
+                    </div>
+                    <input type="email" formControlName="email" placeholder="Email">
+                    <div *ngIf="signupForm.get('email')?.invalid && signupForm.get('email')?.touched">
+                        <small *ngIf="signupForm.get('email')?.errors?.['required']">Email is required.</small>
+                        <small *ngIf="signupForm.get('email')?.errors?.['email']">Invalid Email.</small>
+                        <small *ngIf="signupForm.get('email')?.errors?.['invalidEmail']">Invalid Email Format.</small>
+                    </div>
+                    <input type="password" formControlName="password" placeholder="Password">
+                    <div *ngIf="signupForm.get('password')?.invalid && signupForm.get('password')?.touched">
+                        <small *ngIf="signupForm.get('password')?.errors?.['required']">Password is required.</small>
+                        <small *ngIf="signupForm.get('password')?.errors?.['invalidPassword']">Password must have at least 6 characters, one uppercase, one lowercase, a number, and a special character.</small>
+                    </div>
+                    <input type="password" formControlName="confirmPassword" placeholder="Confirm Password">
+                    <div *ngIf="signupForm.get('confirmPassword')?.invalid && signupForm.get('confirmPassword')?.touched">
+                        <small *ngIf="signupForm.get('confirmPassword')?.errors?.['required']">Confirm Password is required.</small>
+                        <small *ngIf="signupForm.get('confirmPassword')?.errors?.['passwordsMismatch']">Passwords do not match.</small>
+                    </div>
+                    <button type="submit" [disabled]="signupForm.invalid">Sign up</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="login">
+            <form [formGroup]="loginForm" (ngSubmit)="onLogIn($event)">
+                <label for="chk" aria-hidden="true">Login</label>
+                <div class="login-content">
+                    <input type="text" formControlName="userName" placeholder="User Name">
+                    <div *ngIf="loginForm.get('userName')?.invalid && loginForm.get('userName')?.touched">
+                        <small *ngIf="loginForm.get('userName')?.errors?.['required']">User Name is required.</small>
+                    </div>
+                    <input type="password" formControlName="password" placeholder="Password">
+                    <div *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
+                        <small *ngIf="loginForm.get('password')?.errors?.['required']">Password is required.</small>
+                    </div>
+                    <div *ngIf="loginError" class="error-message">{{ loginError }}</div>
+                    <button type="submit" [disabled]="loginForm.invalid">Login</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

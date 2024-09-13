@@ -1,0 +1,119 @@
+
+<html>
+<body>
+<div class="container">
+    <h2>Anime Collection</h2>
+  
+    <form [formGroup]="animeForm" (ngSubmit)="addAnime()">
+        <div>
+          <label for="title">Title:</label>
+          <input type="text" id="title" formControlName="title" required>
+          <div *ngIf="animeForm.get('title')?.invalid && animeForm.get('title')?.touched">
+            Title is required.
+          </div>
+        </div>
+    
+        <div>
+          <label for="type">Demographic:</label>
+          <select id="type" formControlName="type" required>
+            <option value="" disabled>Select Type</option>
+            <option *ngFor="let type of types" [value]="type">{{ type }}</option>
+          </select>
+          <div *ngIf="animeForm.get('type')?.invalid && animeForm.get('type')?.touched">
+            Demographic is required.
+          </div>
+        </div>
+    
+        <div>
+          <label for="year">Year:</label>
+          <input type="text" id="year" formControlName="year" required>
+          <div *ngIf="animeForm.get('year')?.invalid && animeForm.get('year')?.touched">
+            Year must be a 4-digit number.
+          </div>
+        </div>
+    
+        <div>
+          <label for="genre">Genre:</label>
+          <select id="genre" formControlName="genre" required>
+            <option value="" disabled>Select Genre</option>
+            <option *ngFor="let genre of genres" [value]="genre">{{ genre }}</option>
+          </select>
+          <div *ngIf="animeForm.get('genre')?.invalid && animeForm.get('genre')?.touched">
+            Genre is required.
+          </div>
+        </div>
+    
+        <div>
+          <label for="rating">Rating:</label>
+          <input type="number" id="rating" formControlName="rating" min="0" max="10" required>
+          <div *ngIf="animeForm.get('rating')?.invalid && animeForm.get('rating')?.touched">
+            Rating must be between 0 and 10.
+          </div>
+        </div>
+    
+        <button type="submit" [disabled]="animeForm.invalid">
+          {{ isEditing ? 'Update Anime' : 'Add Anime' }}
+        </button>
+        <button type="button" *ngIf="isEditing" (click)="cancelEdit()">Cancel</button>
+      </form>
+  
+    <div class="search-bar">
+      <input
+        type="text"
+        placeholder="Search by title..."
+        [(ngModel)]="searchQuery"
+        (input)="onSearchChange()"
+      />
+    </div>
+  
+    <table>
+      <thead>
+        <tr>
+          <th (click)="sortColumnBy('title')">Title</th>
+          <th (click)="sortColumnBy('type')">Demographic</th>
+          <th (click)="sortColumnBy('year')">Year</th>
+          <th (click)="sortColumnBy('genre')">Genre</th>
+          <th (click)="sortColumnBy('rating')">Rating</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let anime of filteredAnimeList; let i = index" (click)="onAnimeSelected(anime)">
+          <td>{{ anime.title }}</td>
+          <td>{{ anime.type }}</td>
+          <td>{{ anime.year }}</td>
+          <td>{{ anime.genre }}</td>
+          <td>
+            <div class="rating-stars">
+              <span *ngFor="let star of getStars(anime.rating); let i = index" 
+                    class="star" 
+                    [ngClass]="{
+                      'full': star === 1, 
+                      'half': star === 0.5, 
+                      'empty': star === 0
+                    }">
+              </span>
+            </div>
+          </td>
+          <td>
+            <button (click)="editAnime(i)">Edit</button>
+            <button (click)="deleteAnime(i)">Delete</button>
+            <button (click)="openReviewDialog(i)">
+              {{ anime.review ? 'Edit Review' : 'Add Review' }}
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    
+    <div class="modal" [ngClass]="{'show': showReviewModal}">
+      <div class="modal-content">
+        <span class="close" (click)="closeReviewDialog()">&times;</span>
+        <h3>{{ selectedAnimeIndex !== null ? 'Edit Review' : 'Add Review' }}</h3>
+        <textarea [(ngModel)]="currentReview" placeholder="Write your review here..."></textarea>
+        <button (click)="saveReview()">Save Review</button>
+      </div>
+    </div>
+</div>
+</body>
+</html>
